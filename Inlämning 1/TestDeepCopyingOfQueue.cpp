@@ -102,5 +102,6 @@ int main()
 	fQueue.enqueue(10);
 	fQueue.enqueue(30);
 
+	getchar();//Behövdes för att se resultatet 
 	return 0;
 }

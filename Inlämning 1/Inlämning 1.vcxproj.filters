@@ -21,13 +21,13 @@
     <ClCompile Include="TestFunctionalityOfQueue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="JosephusProblem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="TestDeepCopyingOfList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TestDeepCopyingOfQueue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="JosephusProblem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

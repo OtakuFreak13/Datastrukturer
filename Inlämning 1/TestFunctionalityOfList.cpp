@@ -223,5 +223,6 @@ int main()
 	cout << endl << endl;
 
 	cout << "End of test" << endl;
+	getchar();//Behövdes för att se resultatet 
 	return 0;
 }

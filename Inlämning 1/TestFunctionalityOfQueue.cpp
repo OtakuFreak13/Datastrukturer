@@ -78,6 +78,6 @@ int main()
 	for (int i=0; i<190; i++)
 		aQueue.dequeue();
 
-
+	getchar();//Behövdes för att se resultatet 
 	return 0;
 }

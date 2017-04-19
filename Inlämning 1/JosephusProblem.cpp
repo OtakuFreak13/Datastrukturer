@@ -29,6 +29,7 @@ int main()
 		cout << queueOfPersons.front() << ", ";
 		queueOfPersons.dequeue();
 	}
+	system("pause");//Behövdes för att se resultatet 
 	return 0;
 }
 

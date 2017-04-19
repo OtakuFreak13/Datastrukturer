@@ -3,7 +3,7 @@
 
 #include "IQueue.h"
 
-using namespace std;//WHY GITTHUB NOT WORK!?!?
+using namespace std;//GITHUB FUNKA PLS!!
 
 template <typename T>
 class Queue :

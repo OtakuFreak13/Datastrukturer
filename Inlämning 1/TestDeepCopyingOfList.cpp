@@ -212,5 +212,6 @@ int main()
 
 	cout << endl << endl << "end of test" << endl;
 
+	getchar();//Behövdes för att se resultatet 
 	return 0;
 }

@@ -24,10 +24,12 @@ private:
 	};
 	Node* current;
 	int nrOfElements;
-	direction dirrection;//TODO döp om till currentDirection
+	direction currentDirection;
 public:
 	CircularDoubleDirectedList();
 	~CircularDoubleDirectedList();
+	CircularDoubleDirectedList(const CircularDoubleDirectedList<T>& copy); //Vad är det som kopieras egentligen. Just det "CircularDoubleDirectedList"
+	CircularDoubleDirectedList<T>& operator=(const CircularDoubleDirectedList<T>& copy);
 	void addAtCurrent(const T& element);
 	T getElementAtCurrent() const throw(...);
 	void removeAtCurrent()throw(...);
@@ -40,44 +42,124 @@ public:
 #endif
 
 
-
+ 
 template<typename T>
 CircularDoubleDirectedList<T>::CircularDoubleDirectedList()
 {
 	this->current = nullptr;
 	this->nrOfElements = 0;
-	this->dirrection = FORWARD;
+	this->currentDirection = FORWARD;
 }
 
 template<typename T>
 CircularDoubleDirectedList<T>::~CircularDoubleDirectedList()
 {
+	while (this->current != nullptr)
+	{
+		this->removeAtCurrent();
+	}
+}
 
+template<typename T>
+CircularDoubleDirectedList<T>::CircularDoubleDirectedList(const CircularDoubleDirectedList<T>& copy)
+{
+	this->nrOfElements = copy.nrOfElements;
+	this->currentDirection = copy.currentDirection;
+
+	if (this->nrOfElements > 0)
+	{
+		Node* walker = copy.current;
+		T element = walker->element;
+		this->current = new Node(nullptr, nullptr, element);
+		this->current->prev = this->current;
+		this->current->next = this->current;
+		Node* walkerNew = this->current;
+		Node* walkerOld;
+		int i = 0;
+		while (i < this->nrOfElements - 1)
+		{
+			walker = walker->next;
+			walkerOld = walkerNew;
+			element = walker->element;
+			walkerNew = new Node(nullptr, nullptr, element);
+			walkerNew->prev = walkerOld;
+			walkerOld->next = walkerNew;
+
+			i++;
+		}
+		walkerNew->next = this->current;
+		this->current->prev = walkerNew;
+	}
+	else
+	{
+		this->current = nullptr;
+	}
+
+}
+
+template<typename T>
+inline CircularDoubleDirectedList<T>& CircularDoubleDirectedList<T>::operator=(const CircularDoubleDirectedList<T>& copy)
+{
+	if (this->current != copy.current)
+	{
+		while (this->current != nullptr)
+		{
+			this->removeAtCurrent();
+		}
+		this->nrOfElements = copy.nrOfElements;
+		this->currentDirection = copy.currentDirection;
+
+		if (this->nrOfElements > 0)
+		{
+			Node* walker = copy.current;
+			T element = walker->element;
+			this->current = new Node(nullptr, nullptr, element);
+			this->current->prev = this->current;
+			this->current->next = this->current;
+			Node* walkerNew = this->current;
+			Node* walkerOld;
+			int i = 0;
+			while (i < this->nrOfElements - 1)
+			{
+				walker = walker->next;
+				walkerOld = walkerNew;
+				element = walker->element;
+				walkerNew = new Node(nullptr, nullptr, element);
+				walkerNew->prev = walkerOld;
+				walkerOld->next = walkerNew;
+
+				i++;
+			}
+			walkerNew->next = this->current;
+			this->current->prev = walkerNew;
+		}
+		else
+		{
+			this->current = nullptr;
+		}
+	}
+	return *this;
 }
 
 template<typename T>
 void CircularDoubleDirectedList<T>::addAtCurrent(const T & element)
 {
-	if (this->current == nullptr)//TODO gör så att den pekar på sig själv om den är det enda objektet
+	if (this->current == nullptr)
 	{
 		this->current = new Node(this->current, this->current, element);
+		this->current->next = this->current;
+		this->current->prev = this->current;
 	}
-	//else if (this->current->next == current)//Kanske behövs kanske inte
-	//{
-	//	Node* walker = this->current;
-	//	this->current = new Node(walker, walker, element);
-	//	walker->next = this->current;
-	//	walker->prev = this->current;
-	//}
-	else if (this->dirrection == FORWARD)
+	else if (this->currentDirection == FORWARD)
 	{
 		Node* walker = this->current;
 		this->current = new Node(walker, walker->next, element);
+
 		walker->next->prev = this->current;
-		walker->next = current;
+		walker->next = this->current;
 
 	}
-	else if (this->dirrection == BACKWARD)
+	else if (this->currentDirection == BACKWARD)
 	{
 		Node* walker = this->current;
 		this->current = new Node(walker->prev, walker, element);
@@ -103,23 +185,33 @@ T CircularDoubleDirectedList<T>::getElementAtCurrent() const throw(...)
 template<typename T>
 void CircularDoubleDirectedList<T>::removeAtCurrent()throw(...)
 {
+
 	if (this->current == nullptr)
 	{
 		throw("Exception: call of removeAtCurrent on empty list");
 	}
-	else 
+	else if (this->nrOfElements == 1)
 	{
+		delete this->current;
+		this->current = nullptr;
+		this->nrOfElements--;
+	}
+	else
+	{
+		Node* walker = this->current;
 		this->current->next->prev = this->current->prev;
 		this->current->prev->next = this->current->next;
-		if (this->dirrection == FORWARD)
-		{
-			this->current = this->current->prev;
-		}
-		if (this->dirrection == BACKWARD)
+		if (this->currentDirection == FORWARD)
 		{
 			this->current = this->current->next;
 		}
+		if (this->currentDirection == BACKWARD)
+		{
+			this->current = this->current->prev;
+		}
 		this->nrOfElements--;
+		delete walker;
+		walker = nullptr;
 	}
 }
 
@@ -132,13 +224,13 @@ int CircularDoubleDirectedList<T>::size() const
 template<typename T>
 void CircularDoubleDirectedList<T>::changeDirection()
 {
-	if (this->dirrection == FORWARD)
+	if (this->currentDirection == FORWARD)
 	{
-		this->dirrection = BACKWARD;
+		this->currentDirection = BACKWARD;
 	}
 	else
 	{
-		this->dirrection = FORWARD;
+		this->currentDirection = FORWARD;
 	}
 }
 
@@ -147,9 +239,9 @@ void CircularDoubleDirectedList<T>::moveCurrent() throw(...)
 {
 	if (this->current == nullptr)
 	{
-		throw("Exception: call of moveCurrent on empty list");
+		throw "Exception: call of moveCurrent on empty list";
 	}
-	else if (this->dirrection == FORWARD)
+	else if (this->currentDirection == FORWARD)
 	{
 		this->current = this->current->next;
 	}
@@ -162,6 +254,6 @@ void CircularDoubleDirectedList<T>::moveCurrent() throw(...)
 template<typename T>
 inline direction CircularDoubleDirectedList<T>::getCurrentDirection() const
 {
-	return this->dirrection;
+	return this->currentDirection;
 }
 
