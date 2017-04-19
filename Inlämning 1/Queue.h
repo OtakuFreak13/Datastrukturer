@@ -3,7 +3,7 @@
 
 #include "IQueue.h"
 
-using namespace std;//WHY GITTHUB NOT WORK!?
+using namespace std;//WHY GITTHUB NOT WORK!?!?
 
 template <typename T>
 class Queue :
